@@ -1,5 +1,5 @@
-from functions import *
-"""from tkinter import *
+#from functions import *
+from tkinter import *
 from subprocess import Popen,PIPE
 import subprocess
 import os
@@ -8,32 +8,44 @@ from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import simpledialog
 from tkinter import ttk
+import pandas as  pd
+import numpy as np
+
 dirname = ''
 files=''
 CSV_name=""
+batch_names=""
+#------------------------------------------------
 name = os.popen('whoami').read()
+
 def terminal():
     subprocess.call(["ls","-a"])
+
 def username():
     uname = simpledialog.askstring("Input", "enter username",parent=window)
     return uname
+
 def password():
     passwd = simpledialog.askstring("Password","Enter your password",show="*",parent=window)
     return passwd
+
 def shutdown():
        subprocess.call(["shutdown", "-h", "now"])
        messagebox.showinfo("msg","SHUTDOWN starts in 60sec")
 def shutdowncancel():
        subprocess.call(["shutdown", "-c"])
        messagebox.showinfo("msg","SHUTDOWN starts in 60sec")
+
 def timeshut():
        time=e5_hour.get()+":"+e5_minitue.get()
        subprocess.call(["shutdown "+time])
        messagebox.showinfo("msg","SHUTDOWN is scheduled")
+
 def timerestart():
        time=e5_hour.get()+":"+e5_minitue.get()
        subprocess.call(["shutdown", "-r", "now"])
        messagebox.showinfo("msg","RESTAR starts in 60sec")
+
 def editorder():
     password1=password()
     order=e1_order.get()
@@ -43,7 +55,9 @@ def editorder():
     #subprocess.call(["echo \""+password1+"\" | ","sudo","-S","sed","-i","s/GRUB_DEFAULT=[0-9]*/GRUB_DEFAULT="+order+"/g","/etc/default/grub"],shell=True)
     subprocess.call(command,shell=True)
     subprocess.call(command2,shell=True)
+
     messagebox.showinfo("sucess", "default software  changed to")
+
 def edittime():
        password1=password()
        timeer=e2_time.get()
@@ -52,8 +66,10 @@ def edittime():
        command1="echo "+password1+" | sudo -S sed -i s/GRUB_TIMEOUT=[0-9]*/GRUB_TIMEOUT="+timeer+"/g /etc/default/grub"
        subprocess.call(command1,shell=True)
        subprocess.call(command2,shell=True)
+
        #subprocess.call(["echo \""+password1+"\" | ","sudo","-S","sed","-i","s/GRUB_TIMEOUT=[0-9]*/GRUB_TIMEOUT="+timeer+"/g","/etc/default/grub"],shell=True)
        messagebox.showinfo("sucess", "default TIMEOUT  changed ")
+
 def openDirectory():
     files = filedialog.askopenfilenames(parent=root,initialdir='/home/', title='Select your pictures folder')
     file_name=files[0]
@@ -75,12 +91,17 @@ def openDirectory():
     subprocess.call(command5,shell=True)
     messagebox.showinfo("sucess", "default BACKGROUND ")
     #dirname = filedialog.askdirectory(parent=window, initialdir='/home/', title='Select your pictures folder')
+
 def spalshscreen():
     passer=v.get()
     password1=password()
+
     command1="echo "+password1+" | sudo -S apt-get install plymouth-theme-breeze"
+
     command2="echo "+password1+" | sudo -S apt-get install plymouth-theme-ubuntustudio"
+
     command3="echo "+passer+" | sudo -S update-alternatives --config default.plymouth"
+
     command4="echo "+password1+" | sudo -S update-initramfs -u"
     #command1="echo "+password1+" | sudo -S sed -i s/GRUB_TIMEOUT=[0-9]*/GRUB_TIMEOUT="+timeer+"/g /etc/default/grub"
     subprocess.call(command1,shell=True)
@@ -88,6 +109,7 @@ def spalshscreen():
     subprocess.call(command3,shell=True)
     subprocess.call(command4,shell=True)
     messagebox.showinfo("sucess", "default SPLASH SCREEN is changed.REBOOT TO CHECK")
+
 def addusers():
     password1=password()
     user_name=entry_username.get()
@@ -115,10 +137,20 @@ def addusers():
         messagebox.showinfo("sucess", "user is created")
     else:
         messagebox.showwarning("warning","user details enter correctly")
+
 def openCSV():
-    files = filedialog.askopenfilenames(parent=root,initialdir='/home/', title='UPLOAD FILE')
-    CSV_name=files[0]
-    return CSV_name
+    files = filedialog.askopenfilenames(parent=window,initialdir='/home/', title='UPLOAD FILE')
+    csv_file=files[0]
+    global CSV_name
+    CSV_name=csv_file
+
+def batchcsv():
+    files = filedialog.askopenfilenames(parent=window,initialdir='/home/', title='Select your csv file')
+    batch_file=files[0]
+    global batch_names
+    batch_names=batch_file
+    print(batch_names)
+
 #-------------------------------------single user functions---------------------------------
 def lockuser():
     username=single_user.get()
@@ -126,6 +158,7 @@ def lockuser():
     command="echo "+password1+" | sudo -S usermod -L \""+username+"\""
     subprocess.call(command,shell=True)
     messagebox.showinfo("sucess", "user is locked")
+
 def setexpiry():
     username=single_user.get()
     expi_date=exp_date.get()
@@ -133,22 +166,29 @@ def setexpiry():
     command="echo "+password1+" | sudo -S usermod -e \""+expi_date+"\" \""+username+"\""
     subprocess.call(command,shell=True)
     messagebox.showinfo("sucess", "user expirydate is set.")
+
 def deleteuser():
     username=single_user.get()
     password1=password()
     command="echo "+password1+" | sudo -S userdel \""+username+"\""
     subprocess.call(command,shell=True)
     messagebox.showinfo("sucess", "user is deleted")
+
 def unlockuser():
     username=single_user.get()
     password1=password()
     command="echo "+password1+" | sudo -S usermod -U \""+username+"\""
     subprocess.call(command,shell=True)
     messagebox.showinfo("sucess", "user is unlocked")
+
+
+
     #sudo addgroup -gid 201551006 iiitv
     #sudo useradd -d "/home/mani" -U "201552079" -s "/bin/bash" -u "201552079" -g "201552079" -p "$a" "mani"
+
 def changepasswd():
     pass
+
 def changeuser():
     username=single_user.get()
     newuser=new_user.get()
@@ -156,6 +196,8 @@ def changeuser():
     command="echo "+password1+" | sudo -S usermod -l \""+newuser+"\" \""+username+"\""
     subprocess.call(command,shell=True)
     messagebox.showinfo("sucess", "user is changed so now use updated username in columns")
+
+
 def changeshell():
     username=single_user.get()
     newshell=update_shell.get()
@@ -163,6 +205,7 @@ def changeshell():
     command="echo "+password1+" | sudo -S usermod -s \""+newshell+"\" \""+username+"\""
     subprocess.call(command,shell=True)
     messagebox.showinfo("sucess", "user shell is changed")
+
 def changeuserid():
     username=single_user.get()
     newuserid=up_useriduser.get()
@@ -170,6 +213,7 @@ def changeuserid():
     command="echo "+password1+" | sudo -S usermod -u \""+newuserid+"\" \""+username+"\""
     subprocess.call(command,shell=True)
     messagebox.showinfo("sucess", "user UID is changed")
+
 def addinformation():
     username=single_user.get()
     userinformat=information.get()
@@ -177,7 +221,168 @@ def addinformation():
     command="echo "+password1+" | sudo -S usermod -c \""+userinformat+"\" \""+username+"\""
     subprocess.call(command,shell=True)
     messagebox.showinfo("sucess", "user information is added")
-"""
+
+#----------------------------------BATCH USER FUNCtiONNS====================================
+
+def addbatchusers():
+    data=pd.read_csv(CSV_name)
+    size=data.shape
+    length=size[0]
+    for i in range(length):
+        if(i==0):
+            password1=password()
+            command1="echo "+password1+" | sudo -S apt install whois"
+            print(command1)
+            subprocess.call(command1,shell=True)
+        user_name=str(data.loc[i][0])
+        user_id=str(data.loc[i][1])
+        user_pwd=str(data.loc[i][2])
+        user_shell=str(data.loc[i][3])
+        print(user_shell)
+        command2="mkpasswd -m sha-512 "+user_pwd+""
+        pipeer= Popen(command2, shell=True, stdout=PIPE).stdout
+        output = pipeer.read()
+        encry_pass=output.decode("utf-8")
+        final_pass=encry_pass.rstrip()
+        print(final_pass)
+        if(user_id!="" and user_pwd!="" and user_name!="" and user_shell!=""):
+            command3="echo "+password1+" | sudo -S groupadd -g \""+user_id+"\"  \""+user_name+"\""
+            c
+            ommand4="sudo useradd -d \"/home/"+user_name+"\" -s \""+user_shell+"\" -u \""+user_id+"\" -g \""+user_id+"\" -p \""+final_pass+"\" \""+user_name+"\""
+            print(command4)
+            subprocess.call(command3,shell=True)
+            subprocess.call(command4,shell=True)
+            if(i==(length-1)):
+                messagebox.showinfo("sucess", "users is created")
+
+        else:
+            messagebox.showwarning("warning","user details enter correctly")
+
+def deletebatchusers():
+    data=pd.read_csv(batch_names)
+    size=data.shape
+    length=size[0]
+    for i in range(length):
+        if(i==0):
+            password1=password()
+        user_name=str(data.loc[i][0])
+
+
+        if(user_name!=""):
+            command3="echo "+password1+" | sudo -S groupdel \""+user_name+"\""
+            command4="echo "+password1+" | sudo -S userdel \""+user_name+"\""
+
+            print(command4)
+            subprocess.call(command3,shell=True)
+            subprocess.call(command4,shell=True)
+            if(i==(length-1)):
+                messagebox.showinfo("sucess", "users is deleted")
+
+        else:
+            messagebox.showwarning("warning","user details enter correctly")
+
+def lockbatchusers():
+    data=pd.read_csv(batch_names)
+    size=data.shape
+    length=size[0]
+    for i in range(length):
+        if(i==0):
+            password1=password()
+        username=str(data.loc[i][0])
+        command="echo "+password1+" | sudo -S usermod -L \""+username+"\""
+        subprocess.call(command,shell=True)
+    messagebox.showinfo("sucess", "users is locked")
+
+
+
+def unlockbatchusers():
+    data=pd.read_csv(batch_names)
+    size=data.shape
+    length=size[0]
+    for i in range(length):
+        if(i==0):
+            password1=password()
+        username=str(data.loc[i][0])
+        command="echo "+password1+" | sudo -S usermod -U \""+username+"\""
+        subprocess.call(command,shell=True)
+    messagebox.showinfo("sucess", "users is unlocked")
+
+def changebatchusers():
+    data=pd.read_csv(batch_names)
+    size=data.shape
+    length=size[0]
+    for i in range(length):
+        if(i==0):
+            password1=password()
+
+        username=str(data.loc[i][0])
+        newuser=str(data.loc[i][1])
+        command="echo "+password1+" | sudo -S usermod -l \""+newuser+"\" \""+username+"\""
+        subprocess.call(command,shell=True)
+    messagebox.showinfo("sucess", "users is changed so now use updated usernames")
+
+
+def changebatchpasswd():
+    pass
+
+def expirybatchusers():
+    data=pd.read_csv(batch_names)
+    size=data.shape
+    length=size[0]
+    for i in range(length):
+        if(i==0):
+            password1=password()
+
+        username=str(data.loc[i][0])
+        expi_date=str(data.loc[i][1])
+        command="echo "+password1+" | sudo -S usermod -e \""+expi_date+"\" \""+username+"\""
+        subprocess.call(command,shell=True)
+    messagebox.showinfo("sucess", "user expirydate is set.")
+
+def batchusershells():
+    data=pd.read_csv(batch_names)
+    size=data.shape
+    length=size[0]
+    for i in range(length):
+        if(i==0):
+            password1=password()
+
+        username=str(data.loc[i][0])
+        newshell=str(data.loc[i][1])
+        command="echo "+password1+" | sudo -S usermod -s \""+newshell+"\" \""+username+"\""
+        subprocess.call(command,shell=True)
+    messagebox.showinfo("sucess", "users shells is changed")
+
+def uidbatchusers():
+    data=pd.read_csv(batch_names)
+    size=data.shape
+    length=size[0]
+    for i in range(length):
+        if(i==0):
+            password1=password()
+        username=str(data.loc[i][0])
+        newuserid=str(data.loc[i][1])
+        command="echo "+password1+" | sudo -S usermod -u \""+newuserid+"\" \""+username+"\""
+        subprocess.call(command,shell=True)
+    messagebox.showinfo("sucess", "users UID's is changed")
+
+
+def addbatchinfo():
+    data=pd.read_csv(batch_names)
+    size=data.shape
+    length=size[0]
+    for i in range(length):
+        if(i==0):
+            password1=password()
+
+        username=str(data.loc[i][0])
+        userinformat=str(data.loc[i][1])
+        password1=password()
+        command="echo "+password1+" | sudo -S usermod -c \""+userinformat+"\" \""+username+"\""
+        subprocess.call(command,shell=True)
+    messagebox.showinfo("sucess", "users information is added")
+
+
 #------------------------------------------------------------------------------------------
 
 window = Tk()
@@ -448,92 +653,92 @@ update_user=Button(userid_frame,text="update UID",width=12,bg="yellow",padx=5,pa
 update_user.grid(row=3,column=2,columnspan=2,padx=8, pady=2)
 
 
-#------------------------------------------------tab3------------------------------------
+###########------------------------------------------------tab3------------------------------------
 
 tab2_frame1 =LabelFrame(tab3,text="BATCH USER MODE",bd=5,width=500, height=80)
 tab2_frame1.grid(row=0, column=3, rowspan=8, columnspan=2,padx=100,pady=14)
 
-fileupload=Button(tab2_frame1,text="file",width=12,bg="yellow",padx=5,pady=2)
+fileupload=Button(tab2_frame1,text="file",width=12,bg="yellow",padx=5,pady=2,command=openCSV)
 fileupload.grid(row=10,column=4,columnspan=2,padx=8, pady=2)
-fileupload2=Button(tab2_frame1,text="UPLOAD",width=12,bg="yellow",padx=5,pady=2)
+fileupload2=Button(tab2_frame1,text="UPLOAD",width=12,bg="yellow",padx=5,pady=2,command=addbatchusers)
 fileupload2.grid(row=10,column=6,columnspan=2,padx=8, pady=2)
-#-------------------------single mode user operations-------------------------------------
+
+
+#-------------------------BATCH mode user operations-------------------------------------
 
 tab2_frame2 =LabelFrame(tab3,text="BATCH USER FUNCTIONS",bd=5,width=500, height=80)
 tab2_frame2.grid(row=10, column=3, rowspan=8, columnspan=2,padx=100,pady=14)
 
 password_frame=LabelFrame(tab2_frame2,text="changepassword",bd=1,padx=5,pady=2)
 password_frame.grid(row=1,column=1,padx=5,pady=2)
-fileadd=Button(password_frame,text="file",width=8,bg="yellow",padx=5,pady=2)
+fileadd=Button(password_frame,text="file",width=8,bg="yellow",padx=5,pady=2,command=batchcsv)
 fileadd.grid(row=2,column=2,columnspan=2,padx=4, pady=2)
-change_pass=Button(password_frame,text="change",width=15,bg="yellow",padx=5,pady=2,command=changepasswd)
+change_pass=Button(password_frame,text="change",width=15,bg="yellow",padx=5,pady=2,command=changebatchpasswd)
 change_pass.grid(row=3,column=2,columnspan=2,padx=8, pady=2)
 
 
 lock_frame=LabelFrame(tab2_frame2,text="lock user",bd=1,padx=5,pady=2)
 lock_frame.grid(row=2,column=5,padx=5,pady=2)
-fileadd=Button(lock_frame,text="file",width=8,bg="yellow",padx=5,pady=2)
+fileadd=Button(lock_frame,text="file",width=8,bg="yellow",padx=5,pady=2,command=batchcsv)
 fileadd.grid(row=2,column=3,columnspan=2,padx=4, pady=2)
-lock_user=Button(lock_frame,text="lock_user",width=15,bg="yellow",padx=5,pady=2,command=lockuser)
+lock_user=Button(lock_frame,text="lock_user",width=15,bg="yellow",padx=5,pady=2,command=lockbatchusers)
 lock_user.grid(row=3,column=3,columnspan=2,padx=8, pady=2)
 
 unlock_frame=LabelFrame(tab2_frame2,text="unlock user",bd=1,padx=5,pady=2)
 unlock_frame.grid(row=1,column=5,padx=5,pady=2)
-fileadd=Button(unlock_frame,text="file",width=8,bg="yellow",padx=5,pady=2)
+fileadd=Button(unlock_frame,text="file",width=8,bg="yellow",padx=5,pady=2,command=batchcsv)
 fileadd.grid(row=2,column=1,columnspan=2,padx=4, pady=2)
-unlock_user=Button(unlock_frame,text="unlock_user",width=15,bg="yellow",padx=5,pady=2,command=unlockuser)
+unlock_user=Button(unlock_frame,text="unlock_user",width=15,bg="yellow",padx=5,pady=2,command=unlockbatchusers)
 unlock_user.grid(row=3,column=1,columnspan=2,padx=8, pady=2)
 
 usershell_frame=LabelFrame(tab2_frame2,text="change user shell",bd=1,padx=5,pady=4)
 usershell_frame.grid(row=2,column=1,padx=5,pady=2)
-fileadd=Button(usershell_frame,text="file",width=8,bg="yellow",padx=5,pady=2)
+fileadd=Button(usershell_frame,text="file",width=8,bg="yellow",padx=5,pady=2,command=batchcsv)
 fileadd.grid(row=2,column=2,columnspan=2,padx=4, pady=2)
-change_shell=Button(usershell_frame,text="change shell",width=15,bg="yellow",padx=5,pady=2,command=changeshell)
+change_shell=Button(usershell_frame,text="change shell",width=15,bg="yellow",padx=5,pady=2,command=batchusershells)
 change_shell.grid(row=3,column=2,rowspan=2,columnspan=2,padx=8, pady=2)
 
 
 
 changeuser_frame=LabelFrame(tab2_frame2,text="change user",bd=1,padx=5,pady=4)
 changeuser_frame.grid(row=1,column=4,padx=5,pady=2)
-fileadd=Button(changeuser_frame,text="file",width=8,bg="yellow",padx=5,pady=2)
+fileadd=Button(changeuser_frame,text="file",width=8,bg="yellow",padx=5,pady=2,command=batchcsv)
 fileadd.grid(row=2,column=2,columnspan=2,padx=4, pady=2)
-change_shell=Button(changeuser_frame,text="change user",width=15,bg="yellow",padx=5,pady=2,command=changeuser)
+change_shell=Button(changeuser_frame,text="change user",width=15,bg="yellow",padx=5,pady=2,command=changebatchusers)
 change_shell.grid(row=3,column=2,rowspan=2,columnspan=2,padx=8, pady=2)
 
 
 
 userinfo_frame=LabelFrame(tab2_frame2,text="Add user information",bd=1,padx=5,pady=4)
 userinfo_frame.grid(row=2,column=4,padx=5,pady=2)
-fileadd=Button(userinfo_frame,text="file",width=8,bg="yellow",padx=5,pady=2)
+fileadd=Button(userinfo_frame,text="file",width=8,bg="yellow",padx=5,pady=2,command=batchcsv)
 fileadd.grid(row=2,column=2,columnspan=2,padx=4, pady=2)
-update_user=Button(userinfo_frame,text="add information",width=12,bg="yellow",padx=5,pady=2,command=addinformation)
+update_user=Button(userinfo_frame,text="add information",width=12,bg="yellow",padx=5,pady=2,command=addbatchinfo)
 update_user.grid(row=3,column=2,columnspan=2,padx=8, pady=2)
 
 
 expiry_frame=LabelFrame(tab2_frame2,text="Add expirydate",bd=1,padx=5,pady=4)
 expiry_frame.grid(row=3,column=1,padx=5,pady=2)
-fileadd=Button(expiry_frame,text="file",width=8,bg="yellow",padx=5,pady=2)
+fileadd=Button(expiry_frame,text="file",width=8,bg="yellow",padx=5,pady=2,command=batchcsv)
 fileadd.grid(row=2,column=2,columnspan=2,padx=4, pady=2)
-set_expiry=Button(expiry_frame,text="set date",width=15,bg="yellow",padx=5,pady=2,command=setexpiry)
+set_expiry=Button(expiry_frame,text="set date",width=15,bg="yellow",padx=5,pady=2,command=expirybatchusers)
 set_expiry.grid(row=3,column=2,rowspan=2,columnspan=2,padx=8, pady=2)
 
 
 delete_frame=LabelFrame(tab2_frame2,text="delete",bd=1,padx=5,pady=4)
 delete_frame.grid(row=3,column=5,padx=5,pady=2)
-fileadd=Button(delete_frame,text="file",width=8,bg="yellow",padx=5,pady=2)
+fileadd=Button(delete_frame,text="file",width=8,bg="yellow",padx=5,pady=2,command=batchcsv)
 fileadd.grid(row=2,column=1,columnspan=2,padx=4, pady=2)
-lock_user=Button(delete_frame,text="delete user",width=15,bg="yellow",padx=5,pady=2,command=deleteuser)
+lock_user=Button(delete_frame,text="delete user",width=15,bg="yellow",padx=5,pady=2,command=deletebatchusers)
 lock_user.grid(row=3,column=1,columnspan=2,padx=8, pady=2)
 
 
 userid_frame=LabelFrame(tab2_frame2,text="change userid",bd=1,padx=5,pady=4)
 userid_frame.grid(row=3,column=4,padx=5,pady=2)
-fileadd=Button(userid_frame,text="file",width=8,bg="yellow",padx=5,pady=2)
+fileadd=Button(userid_frame,text="file",width=8,bg="yellow",padx=5,pady=2,command=batchcsv)
 fileadd.grid(row=2,column=2,columnspan=2,padx=4, pady=2)
-update_user=Button(userid_frame,text="update UID",width=12,bg="yellow",padx=5,pady=2,command=changeuserid)
+update_user=Button(userid_frame,text="update UID",width=12,bg="yellow",padx=5,pady=2,command=uidbatchusers)
 update_user.grid(row=3,column=2,columnspan=2,padx=8, pady=2)
-
-
 
 
 
