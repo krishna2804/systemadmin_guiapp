@@ -187,7 +187,24 @@ def unlockuser():
     #sudo useradd -d "/home/mani" -U "201552079" -s "/bin/bash" -u "201552079" -g "201552079" -p "$a" "mani"
 
 def changepasswd():
-    pass
+    password1=password()
+    user_name=single_user.get()
+    new_pwd=update_passwd.get()
+    command1="echo "+password1+" | sudo -S apt install whois"
+    subprocess.call(command1,shell=True)
+    command2="mkpasswd -m sha-512 "+new_pwd+""
+    pipeer= Popen(command2, shell=True, stdout=PIPE).stdout
+    output = pipeer.read()
+    encry_pass=output.decode("utf-8")
+    final_pass=encry_pass.rstrip()
+    if(new_pwd!="" and user_name!=""):
+        command3="echo "+password1+" | sudo -S usermod -p \""+final_pass+"\"  \""+user_name+"\""
+        #command4="sudo adduser -m "+user_name+" -u "+user_id+" -g "+user_id+" -p "+encry_pass+" -s "+user_shell+""
+        subprocess.call(command3,shell=True)
+        messagebox.showinfo("sucess", "users passwords are updated")
+    else:
+        messagebox.showwarning("warning","enter valid details")
+
 
 def changeuser():
     username=single_user.get()
@@ -323,7 +340,31 @@ def changebatchusers():
 
 
 def changebatchpasswd():
-    pass
+    data=pd.read_csv(batch_names)
+    size=data.shape
+    length=size[0]
+    for i in range(length):
+        if(i==0):
+            password1=password()
+            command1="echo "+password1+" | sudo -S apt install whois"
+            subprocess.call(command1,shell=True)
+
+
+        user_name=str(data.loc[i][0])
+        new_pwd=str(data.loc[i][1])
+        command2="mkpasswd -m sha-512 "+new_pwd+""
+        pipeer= Popen(command2, shell=True, stdout=PIPE).stdout
+        output = pipeer.read()
+        encry_pass=output.decode("utf-8")
+        final_pass=encry_pass.rstrip()
+        if(new_pwd!="" and user_name!=""):
+            command3="echo "+password1+" | sudo -S usermod -p \""+final_pass+"\"  \""+user_name+"\""
+        #command4="sudo adduser -m "+user_name+" -u "+user_id+" -g "+user_id+" -p "+encry_pass+" -s "+user_shell+""
+            subprocess.call(command3,shell=True)
+        else:
+            messagebox.showwarning("warning","enter valid details")
+    messagebox.showinfo("sucess", "users passwords is updated")
+
 
 def expirybatchusers():
     data=pd.read_csv(batch_names)
@@ -544,13 +585,13 @@ up_userid=StringVar()
 
 password_frame=LabelFrame(tab2_frame2,text="changepassword",bd=1,padx=5,pady=2)
 password_frame.grid(row=1,column=1,padx=5,pady=2)
-oldpasswd_change=Label(password_frame,text="new password",padx=5,pady=2)
-oldpasswd_change.grid(row=1,column=1,columnspan=2,padx=8, pady=2)
-oldpasswd_enter=Entry(password_frame,textvariable=new_passwd)
-oldpasswd_enter.grid(row=1,column=3,columnspan=2,padx=8, pady=2)
+oldpasswd_user=Label(password_frame,text="username",padx=5,pady=2)
+oldpasswd_user.grid(row=1,column=1,columnspan=2,padx=8, pady=2)
+olduser_enter=Entry(password_frame,textvariable=single_user)
+olduser_enter.grid(row=1,column=3,columnspan=2,padx=8, pady=2)
 passwd_change=Label(password_frame,text="change password",padx=5,pady=2)
 passwd_change.grid(row=2,column=1,columnspan=2,padx=8, pady=2)
-passwd_enter=Entry(password_frame,textvariable=update_passwd)
+passwd_enter=Entry(password_frame,textvariable=update_passwd,show="*")
 passwd_enter.grid(row=2,column=3,columnspan=2,padx=8, pady=2)
 change_pass=Button(password_frame,text="change",width=15,bg="yellow",padx=5,pady=2,command=changepasswd)
 change_pass.grid(row=3,column=2,columnspan=2,padx=8, pady=2)
